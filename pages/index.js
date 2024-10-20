@@ -6,7 +6,6 @@ export default function Login() {
   const [senha, setSenha] = useState('');
   const [time, setTime] = useState(new Date());
 
-  // Atualizar o relógio a cada segundo
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timer);

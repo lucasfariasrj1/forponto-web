@@ -25,12 +25,12 @@ export default function RegistroPonto() {
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   };
 
-  const registrarEntrada = async (e) => {
+  const registrarPonto = async (e) => {
     e.preventDefault();
     setMensagem('');
     const hora = formatDateTime(horaAtual); // Usa a hora atual formatada
     try {
-      const response = await fetch('/api/registrarEntrada', {
+      const response = await fetch('/api/registrarPonto', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ matricula, senha, hora }),
@@ -38,34 +38,12 @@ export default function RegistroPonto() {
       const data = await response.json();
 
       if (response.ok) {
-        setMensagem('Entrada registrada com sucesso!');
+        setMensagem(data.message);
       } else {
         setMensagem(data.message);
       }
     } catch (error) {
-      setMensagem('Erro ao registrar entrada.');
-    }
-  };
-
-  const registrarSaida = async (e) => {
-    e.preventDefault();
-    setMensagem('');
-    const hora = formatDateTime(horaAtual); // Usa a hora atual formatada
-    try {
-      const response = await fetch('/api/registrarSaida', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ matricula, senha, hora }),
-      });
-      const data = await response.json();
-
-      if (response.ok) {
-        setMensagem('Saída registrada com sucesso!');
-      } else {
-        setMensagem(data.message);
-      }
-    } catch (error) {
-      setMensagem('Erro ao registrar saída.');
+      setMensagem('Erro ao registrar ponto.');
     }
   };
 
@@ -78,7 +56,7 @@ export default function RegistroPonto() {
             {horaAtual.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
           </p>
           {mensagem && <div className="alert alert-info">{mensagem}</div>}
-          <form>
+          <form onSubmit={registrarPonto}>
             <div className="mb-3">
               <label htmlFor="matricula" className="form-label">Matrícula</label>
               <input
@@ -103,19 +81,8 @@ export default function RegistroPonto() {
                 className="form-control"
               />
             </div>
-            <button
-              type="button"
-              onClick={registrarEntrada}
-              className="btn btn-success w-100 mb-2"
-            >
-              Registrar Entrada
-            </button>
-            <button
-              type="button"
-              onClick={registrarSaida}
-              className="btn btn-danger w-100"
-            >
-              Registrar Saída
+            <button type="submit" className="btn btn-primary w-100">
+              Registrar Ponto
             </button>
           </form>
         </div>
