@@ -1,32 +1,49 @@
 import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-export default function Login() {
+export default function RegistroPonto() {
   const [matricula, setMatricula] = useState('');
   const [senha, setSenha] = useState('');
-  const [time, setTime] = useState(new Date());
+  const [mensagem, setMensagem] = useState('');
+  const [horaAtual, setHoraAtual] = useState(new Date());
 
+  // Atualizar o relógio a cada segundo
   useEffect(() => {
-    const timer = setInterval(() => setTime(new Date()), 1000);
+    const timer = setInterval(() => setHoraAtual(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
 
-  const handleLogin = async (e) => {
+  // Função para formatar a data e hora para o formato "YYYY-MM-DD HH:MM:SS"
+  const formatDateTime = (date) => {
+    const pad = (num) => String(num).padStart(2, '0');
+    const year = date.getFullYear();
+    const month = pad(date.getMonth() + 1);
+    const day = pad(date.getDate());
+    const hours = pad(date.getHours());
+    const minutes = pad(date.getMinutes());
+    const seconds = pad(date.getSeconds());
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  };
+
+  const registrarPonto = async (e) => {
     e.preventDefault();
+    setMensagem('');
+    const hora = formatDateTime(horaAtual); // Usa a hora atual formatada
     try {
-      const response = await fetch('/api/login', {
+      const response = await fetch('/api/registrarPonto', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ matricula, senha }),
+        body: JSON.stringify({ matricula, senha, hora }),
       });
       const data = await response.json();
+
       if (response.ok) {
-        alert('Login bem-sucedido!');
+        setMensagem(data.message);
       } else {
-        alert(data.message);
+        setMensagem(data.message);
       }
     } catch (error) {
-      alert('Erro ao fazer login');
+      setMensagem('Erro ao registrar ponto.');
     }
   };
 
@@ -36,9 +53,10 @@ export default function Login() {
         <div className="card-body">
           <h2 className="card-title text-center mb-3">Registro de Ponto</h2>
           <p className="text-center text-muted mb-4">
-            {time.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+            {horaAtual.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
           </p>
-          <form onSubmit={handleLogin}>
+          {mensagem && <div className="alert alert-info">{mensagem}</div>}
+          <form onSubmit={registrarPonto}>
             <div className="mb-3">
               <label htmlFor="matricula" className="form-label">Matrícula</label>
               <input
@@ -63,7 +81,9 @@ export default function Login() {
                 className="form-control"
               />
             </div>
-            <button type="submit" className="btn btn-primary w-100">Entrar</button>
+            <button type="submit" className="btn btn-primary w-100">
+              Registrar Ponto
+            </button>
           </form>
         </div>
       </div>
