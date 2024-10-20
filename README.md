@@ -23,9 +23,3 @@ Este é um sistema de registro de ponto desenvolvido com Next.js e Bootstrap. El
 
 - Node.js instalado (versão 14 ou superior)
 - MySQL instalado e configurado
-
-### Passos de Instalação
-
-1. Clone este repositório:
-   ```bash
-   git clone https://github.com/seu-usuario/nome-do-repositorio.git
