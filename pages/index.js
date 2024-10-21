@@ -13,6 +13,11 @@ export default function RegistroPonto() {
     return () => clearInterval(timer);
   }, []);
 
+  // Atualizar o título da página
+  useEffect(() => {
+    document.title = 'Registro de Ponto - Sistema de Forponto';
+  }, []);
+
   // Função para formatar a data e hora para o formato "YYYY-MM-DD HH:MM:SS"
   const formatDateTime = (date) => {
     const pad = (num) => String(num).padStart(2, '0');
